@@ -1,15 +1,23 @@
 require('dotenv').config();
 const cors = require('cors'); // Import cors
 const express = require('express');
-
 const app = express();
+
+const dbConnect = require('./db/db'); // Import the database connection
+const userRoutes = require('./routes/user.route'); // Import user routes
+
 
 // Enable CORS
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+dbConnect(); // Connect to the database
 
 // Default route
 app.get('/', (req, res) => {
     res.send('Welcome to the Express server!');
 });
+app.use('/users', userRoutes);
 
 module.exports = app;
