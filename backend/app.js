@@ -5,7 +5,7 @@ const app = express();
 const cookieParser = require('cookie-parser'); // Import cookie-parser
 const dbConnect = require('./db/db'); // Import the database connection
 const userRoutes = require('./routes/user.route'); // Import user routes
-
+const captainRoutes = require('./routes/captain.route'); // Import captain routes
 
 // Enable CORS
 app.use(cors());
@@ -20,5 +20,6 @@ app.get('/', (req, res) => {
     res.send('Welcome to the Express server!');
 });
 app.use('/users', userRoutes);
+app.use('/captains', captainRoutes);
 
 module.exports = app;

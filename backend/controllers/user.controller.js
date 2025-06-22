@@ -11,6 +11,12 @@ module.exports.registerUser = async (req, res, next) => {
   }
 
   const { fullname, email, password } = req.body;
+  // Check if user already exists
+  const isUserExists = await userModel.findOne({ email: email });
+  if (isUserExists) {
+    return res.status(400).json({ message: "User already exists" });
+  }
+  
   const hashedPassword = await userModel.hashPassword(password);
 
   const user = await userService.createUser({
@@ -23,9 +29,9 @@ module.exports.registerUser = async (req, res, next) => {
   const token = user.generateAuthToken();
 
   res.status(201).json({
-    token, user
-  })
-
+    token,
+    user,
+  });
 };
 
 module.exports.loginUser = async (req, res, next) => {
@@ -53,7 +59,8 @@ module.exports.loginUser = async (req, res, next) => {
   res.cookie("token", token); // Set the token in a cookie (optional, if you want to use cookies)
 
   res.status(200).json({
-    token, user
+    token,
+    user,
   });
 };
 
@@ -62,13 +69,13 @@ module.exports.getUserProfile = async (req, res, next) => {
   res.status(200).json(req.user);
 };
 
-module.exports.logoutUser = async(req, res, next) => {
-  // Clear the token cookie
-  res.clearCookie("token");
-
+module.exports.logoutUser = async (req, res, next) => {
   const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
   // Optionally, you can also blacklist the token if you have a blacklist mechanism
   await blacklistTokenModel.create({ token });
 
+  // Clear the token cookie
+  res.clearCookie("token");
+
   res.status(200).json({ message: "Logged out successfully" });
-}
+};
