@@ -124,3 +124,76 @@ Send a JSON object with the following structure:
   "message": "Invalid email or password"
 }
 ```
+
+---
+
+# User Profile Endpoint Documentation
+
+## Endpoint
+
+`GET /users/profile`
+
+## Description
+Returns the authenticated user's profile information. Requires a valid JWT token in the Authorization header or as a cookie.
+
+## Authentication
+- Send the JWT token as a Bearer token in the `Authorization` header:
+  - `Authorization: Bearer <jwt_token>`
+- Or as a cookie named `token`.
+
+## Status Codes
+- **200 OK**: Returns the user profile.
+- **401 Unauthorized**: Missing or invalid token.
+
+## Example Success Response (200)
+```
+{
+  "_id": "60f7c2b5e1d2c8a1b8e4d123",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "socketId": null,
+  "__v": 0
+}
+```
+
+## Example Error Response (401)
+```
+{
+  "message": "Unauthorized"
+}
+```
+
+---
+
+# User Logout Endpoint Documentation
+
+## Endpoint
+
+`GET /users/logout`
+
+## Description
+Logs out the authenticated user by clearing the token cookie and blacklisting the token. Requires authentication.
+
+## Authentication
+- Send the JWT token as a Bearer token in the `Authorization` header or as a cookie named `token`.
+
+## Status Codes
+- **200 OK**: Logout successful.
+- **401 Unauthorized**: Missing or invalid token.
+
+## Example Success Response (200)
+```
+{
+  "message": "Logged out successfully"
+}
+```
+
+## Example Error Response (401)
+```
+{
+  "message": "Unauthorized"
+}
+```
